@@ -93,7 +93,10 @@ public class PhoneApp {
 				
 			case 5:
 				System.out.print("검색어>   ");
-				String srch =sc.next();
+				String search =sc.next();
+				
+				List<PhoneVo> searchList = phoneDao.personSearch(search);
+				
 			default:
 				System.out.println("[다시 입력해 주세요]");		
 			}
