@@ -213,8 +213,9 @@ public class PhoneDao {
 	
 	
 	//사람 검색하기
-	public int personSearch(String search) {
-		int count = -1;
+	public List<PersonVo> personSearch(String search) {
+		
+		List<PersonVo> searchList = new ArrayList<PersonVo>();
 
 		this.getConnection();
 
@@ -227,15 +228,23 @@ public class PhoneDao {
 			query += " 		   company ";
 			query += " from person ";
 			query += " where (name || hp || company) like '%" + search + "%' ";
-			query += "   ";
 
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			
-			count = pstmt.executeUpdate();
-
 			// 4.결과처리
-
+			
+			while (rs.next()) {
+				int personId = rs.getInt("person_id");
+				String name = rs.getString("name");
+				String hp = rs.getString("hp");
+				String company = rs.getString("company");
+				
+				PersonVo personVo = new PersonVo(personId, name, hp, company);
+				
+				searchList.add(personVo);
+				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -243,7 +252,7 @@ public class PhoneDao {
 		// 5. 자원정리
 		this.close();
 
-		return count;
+		return searchList;
 	}
 	
 	
